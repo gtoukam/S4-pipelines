@@ -60,7 +60,6 @@ pipeline {
 
             }
         }
-    }
     
     post {
         always {
@@ -76,4 +75,4 @@ pipeline {
             echo 'Build failed!'
         }
     }
-}
+

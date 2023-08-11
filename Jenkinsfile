@@ -21,6 +21,7 @@ pipeline {
                 // Run tests
                 sh 'mvn test'
                 
+                
             }
         }
     }

@@ -6,8 +6,11 @@ pipeline {
         timeout (time: 60, unit: 'MINUTES')
         timestamps()
     }
+    environment {
+		DOCKERHUB_CREDS=credentials('dockerhub-creds')
+	} 
     stages {
-         stage('SonarQube analysis') {
+        stage('SonarQube analysis') {
             agent {
                 docker {
                   image 'sonarsource/sonar-scanner-cli:4.7.0'
@@ -24,6 +27,15 @@ pipeline {
                 }
             }
         } 
+        stage('Docker Hub Login') {
+                steps {
+                    script {
+                        // Log in to Docker Hub
+                        sh "docker login -u ${DOCKERHUB_CREDS_USR} -p ${DOCKERHUB_CREDS_PSW}"
+                    }
+                }
+            }
+    }
         
         stage('Build') {
             steps {

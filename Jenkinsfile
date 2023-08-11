@@ -7,7 +7,7 @@ pipeline {
         timestamps()
     }
     environment {
-        DOCKERHUB_CREDS = credentials('dockerhub-creds')
+        dockerhub-creds = credentials('dockerhub-creds')
     } 
     stages {
         stage('SonarQube analysis') {
@@ -26,19 +26,16 @@ pipeline {
                 }
             }
         } 
-        stage('Docker Hub Login') {
-    steps {
-        script {
-            if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
-                echo "Skipping Docker Hub Login due to previous failure."
-            } else {
-                def dockerLoginCmd = "docker login -u ${DOCKERHUB_CREDS_USR} -p ${DOCKERHUB_CREDS_PSW}"
-                sh dockerLoginCmd
+        stage('Docker Login') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh """
+                        echo '\${dockerhub-creds_PSW}' | docker login --username '\${dockerhub-creds_USR}' --password-stdin
+                    """
+                }
             }
         }
-    }
-}
-
     }
 }
 

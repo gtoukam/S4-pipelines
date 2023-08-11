@@ -5,7 +5,7 @@ pipeline {
         disableConcurrentBuilds()
         timeout (time: 60, unit: 'MINUTES')
         timestamps()
-    }
+      }
     environment {
 		DOCKERHUB_CREDS=credentials('dockerhub-creds')
 	} 
@@ -39,6 +39,12 @@ pipeline {
         }
 
     }
+        
+
+
+
+
+
         
         stage('Build') {
             steps {

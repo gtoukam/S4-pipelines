@@ -32,7 +32,7 @@ pipeline {
                     // Log in to Docker Hub
                     sh '''
                         cd auth
-                        docker build -t devopseasylearning/s4-pipelines-auth:$(BUILD_NUMBER)
+                        docker build -t devopseasylearning/s4-pipelines-auth:$(BUILD_NUMBER) .
                         cd -
                     '''
                 }
@@ -56,7 +56,7 @@ pipeline {
                     // Log in to Docker Hub
                     sh '''
                         cd DB
-                        docker build -t devopseasylearning/s4-pipelines-DB:$(BUILD_NUMBER)
+                        docker build -t devopseasylearning/s4-pipelines-DB:$(BUILD_NUMBER) .
                         cd -
                     '''
                 }
@@ -80,7 +80,7 @@ pipeline {
                     // Log in to Docker Hub
                     sh '''
                         cd UI
-                        docker build -t devopseasylearning/s4-pipelines-UI:$(BUILD_NUMBER)
+                        docker build -t devopseasylearning/s4-pipelines-UI:$(BUILD_NUMBER) .
                         cd -
                     '''
                 }
@@ -104,7 +104,7 @@ pipeline {
                     // Log in to Docker Hub
                     sh '''
                         cd weather
-                        docker build -t devopseasylearning/s4-pipelines-weather:$(BUILD_NUMBER)
+                        docker build -t devopseasylearning/s4-pipelines-weather:$(BUILD_NUMBER) .
                         cd -
                     '''
                 }

@@ -50,25 +50,25 @@ pipeline {
             }
         }
 
-        stage('Build DB') {
+        stage('Build db') {
             steps {
                 script {
                     // Log in to Docker Hub
                     sh '''
-                        cd DB
-                        docker build -t devopseasylearning/s4-pipelines-DB:${BUILD_NUMBER} .
+                        cd db
+                        docker build -t devopseasylearning/s4-pipelines-db:${BUILD_NUMBER} .
                         cd -
                     '''
                 }
             }
         }
 
-        stage('push DB') {
+        stage('push db') {
             steps {
                 script {
                     // Log in to Docker Hub
                     sh '''
-                        docker push devopseasylearning/s4-pipelines-DB:${BUILD_NUMBER}
+                        docker push devopseasylearning/s4-pipelines-db:${BUILD_NUMBER}
                     '''
                 }
             }

@@ -26,16 +26,19 @@ pipeline {
                 }
             }
         } 
-        stage('Docker Login') {
-            steps {
-                script {
-                    // Log in to Docker Hub
-                    sh """
-                        echo '\${DOCKERHUB_CREDS_PSW}' | docker login --username '\${DOCKERHUB_CREDS_USR}' --password-stdin
-                    """
-                }
+        stage('Docker Hub Login') {
+    steps {
+        script {
+            if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
+                echo "Skipping Docker Hub Login due to previous failure."
+            } else {
+                def dockerLoginCmd = "docker login -u ${DOCKERHUB_CREDS_USR} -p ${DOCKERHUB_CREDS_PSW}"
+                sh dockerLoginCmd
             }
         }
+    }
+}
+
     }
 }
 

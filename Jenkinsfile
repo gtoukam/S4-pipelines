@@ -1,6 +1,11 @@
 pipeline {
     agent any
-    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+        timeout (time: 60, unit: 'MINUTES')
+        timestamps()
+    }
     stages {
          stage('SonarQube analysis') {
             agent {
@@ -28,7 +33,7 @@ pipeline {
         }
         
         stage('Test') {
-            steps {
+            steps { 
                 // Run tests
                 sh 'mvn test'
 

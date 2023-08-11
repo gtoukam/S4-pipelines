@@ -20,8 +20,7 @@ pipeline {
             steps {
                 // Run tests
                 sh 'mvn test'
-                
-                
+
             }
         }
     }

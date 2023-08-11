@@ -28,13 +28,16 @@ pipeline {
             }
         } 
         stage('Docker Login') {
-                steps {
-                    script {
-                        // Log in to Docker Hub
-                        sh "docker login -u ${DOCKERHUB_CREDS_USR} -p ${DOCKERHUB_CREDS_PSW}"
-                    }
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh '''
+                        echo "${DOCKERHUB_CREDS_PSW}" | docker login --username "${DOCKERHUB_CREDS_USR}" --password-stdin
+                    '''
                 }
             }
+        }
+
     }
         
         stage('Build') {

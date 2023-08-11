@@ -3,25 +3,24 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: '20'))
         disableConcurrentBuilds()
-        timeout (time: 60, unit: 'MINUTES')
+        timeout(time: 60, unit: 'MINUTES')
         timestamps()
-      }
+    }
     environment {
-		DOCKERHUB_CREDS=credentials('dockerhub-creds')
-	} 
+        DOCKERHUB_CREDS = credentials('dockerhub-creds')
+    } 
     stages {
         stage('SonarQube analysis') {
             agent {
                 docker {
-                  image 'sonarsource/sonar-scanner-cli:4.7.0'
+                    image 'sonarsource/sonar-scanner-cli:4.7.0'
                 }
-               }
-               environment {
-        CI = 'true'
-        //  scannerHome = tool 'Sonar'
-        scannerHome='/opt/sonar-scanner'
-    }
-            steps{
+            }
+            environment {
+                CI = 'true'
+                scannerHome = '/opt/sonar-scanner'
+            }
+            steps {
                 withSonarQubeEnv('Sonar') {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
@@ -31,21 +30,22 @@ pipeline {
             steps {
                 script {
                     // Log in to Docker Hub
-                    sh '''
-                        echo "${DOCKERHUB_CREDS_PSW}" | docker login --username "${DOCKERHUB_CREDS_USR}" --password-stdin
-                    '''
+                    sh """
+                        echo '\${DOCKERHUB_CREDS_PSW}' | docker login --username '\${DOCKERHUB_CREDS_USR}' --password-stdin
+                    """
                 }
             }
         }
-
     }
-        
-
-
-
-
+}
 
         
+
+
+
+
+
+
         stage('Build') {
             steps {
                 // Build the Maven project

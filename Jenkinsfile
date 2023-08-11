@@ -26,16 +26,103 @@ pipeline {
                 }
             }
         } 
-         stage('Docker Login') {
+         stage('Build auth') {
             steps {
                 script {
                     // Log in to Docker Hub
                     sh '''
-                        echo "${DOCKERHUB_CREDS_PSW}" | docker login --username "${DOCKERHUB_CREDS_USR}" --password-stdin
+                        cd auth
+                        docker build -t devopseasylearning/s4-pipelines-auth:$(BUILD_NUMBER)
+                        cd -
                     '''
                 }
             }
         }
+
+        stage('push auth') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh '''
+                        docker push devopseasylearning/s4-pipelines-auth:$(BUILD_NUMBER)
+                    '''
+                }
+            }
+        }
+
+        stage('Build DB') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh '''
+                        cd DB
+                        docker build -t devopseasylearning/s4-pipelines-DB:$(BUILD_NUMBER)
+                        cd -
+                    '''
+                }
+            }
+        }
+
+        stage('push DB') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh '''
+                        docker push devopseasylearning/s4-pipelines-DB:$(BUILD_NUMBER)
+                    '''
+                }
+            }
+        }
+
+        stage('Build UI') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh '''
+                        cd UI
+                        docker build -t devopseasylearning/s4-pipelines-UI:$(BUILD_NUMBER)
+                        cd -
+                    '''
+                }
+            }
+        }
+
+        stage('push UI') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh '''
+                        docker push devopseasylearning/s4-pipelines-UI:$(BUILD_NUMBER)
+                    '''
+                }
+            }
+        }
+
+        stage('Build weather') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh '''
+                        cd weather
+                        docker build -t devopseasylearning/s4-pipelines-weather:$(BUILD_NUMBER)
+                        cd -
+                    '''
+                }
+            }
+        }
+
+        stage('push weather') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh '''
+                        docker push devopseasylearning/s4-pipelines-weather:$(BUILD_NUMBER)
+                    '''
+                }
+            }
+        }
+
+
     }
 }
 

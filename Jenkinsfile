@@ -2,12 +2,23 @@ pipeline {
     agent any
     
     stages {
-        stage('Checkout') {
-            steps {
-                // Check out the code from a Git repository
-                git 'https://github.com/yourusername/your-repo.git'
+         stage('SonarQube analysis') {
+            agent {
+                docker {
+                  image 'sonarsource/sonar-scanner-cli:4.7.0'
+                }
+               }
+               environment {
+        CI = 'true'
+        //  scannerHome = tool 'Sonar'
+        scannerHome='/opt/sonar-scanner'
+    }
+            steps{
+                withSonarQubeEnv('Sonar') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
             }
-        }
+        } 
         
         stage('Build') {
             steps {

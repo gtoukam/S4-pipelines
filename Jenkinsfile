@@ -7,7 +7,7 @@ pipeline {
         timestamps()
     }
     environment {
-        dockerhub-creds = credentials('dockerhub-creds')
+        DOCKERHUB_CREDS = credentials('dockerhub-creds')
     } 
     stages {
         stage('SonarQube analysis') {
@@ -31,7 +31,7 @@ pipeline {
                 script {
                     // Log in to Docker Hub
                     sh """
-                        echo '\${dockerhub-creds_PSW}' | docker login --username '\${dockerhub-creds_USR}' --password-stdin
+                        echo '\${DOCKERHUB_CREDS_PSW}' | docker login --username '\${DOCKERHUB_CREDS_USR}' --password-stdin
                     """
                 }
             }

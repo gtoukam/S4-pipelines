@@ -122,6 +122,58 @@ pipeline {
             }
         }
 
+        stage('Update DEV  charts') {
+    //   when{  
+    //       expression {
+    //         env.ENVIRONMENT == 'DEV' }
+          
+    //         }
+      
+            steps {
+                script {
+
+                    sh '''
+git clone git@github.com:gtoukam/S4gautier-charts.git
+cd S4gautier-charts
+ls
+pwd
+cat << EOF > charts/weatherapp-auth/dev-values.yaml
+image:
+  repository: devopseasylearning/s4gautier-auth
+  tag: ${BUILD_NUMBER}
+EOF
+
+
+cat << EOF > charts/weatherapp-mysql/dev-values.yaml
+image:
+  repository: devopseasylearning/s4gautier-db
+  tag: ${BUILD_NUMBER}
+EOF
+
+cat << EOF > charts/weatherapp-ui/dev-values.yaml
+image:
+  repository: devopseasylearning/s4gautier-ui
+  tag: ${BUILD_NUMBER}
+EOF
+
+cat << EOF > charts/weatherapp-weather/dev-values.yaml
+image:
+  repository: devopseasylearning/s4gautier-weather
+  tag: ${BUILD_NUMBER}
+EOF
+
+
+git config --global user.name "gtoukam"
+git config --global user.email "gautiertoukam29@gmail.com"
+
+git add -A 
+git commit -m "change from jenkins CI"
+git push 
+                    '''
+                }
+            }
+        }
+
 
     }
 

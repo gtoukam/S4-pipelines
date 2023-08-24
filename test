@@ -1,0 +1,116 @@
+pipeline {
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+        timeout(time: 60, unit: 'MINUTES')
+        timestamps()
+    }
+    environment {
+        DOCKERHUB_CREDS = credentials('dockerhub-creds')
+    } 
+    stages {
+        // ... previous stages ...
+
+        stage('Update charts') {
+            steps {
+                script {
+                    sh '''
+                        git clone https://username:personal-access-token@github.com/gtoukam/S4gautier-charts.git
+                        https://github.com/gtoukam/S4gautier-charts.git
+                        cd S4gautier-charts
+                        ls
+                        pwd
+                        cat << EOF > charts/weatherapp-auth/dev-values.yaml
+                        image:
+                          repository: devopseasylearning/s4gautier-auth
+                          tag: ${BUILD_NUMBER}
+                        EOF
+
+                        # ... continue with other chart updates ...
+
+                        git config --global user.name "gtoukam"
+                        git config --global user.email "gautiertoukam29@gmail.com"
+
+                        git add -A 
+                        git commit -m "change from Jenkins CI"
+                        git push 
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            slackSend (channel: '#development-alerts', color: 'good', message: "SUCCESSFUL: Application s4gautier-pipeline  Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+
+        unstable {
+            slackSend (channel: '#development-alerts', color: 'warning', message: "UNSTABLE: Application s4gautier-pipeline  Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+
+        failure {
+            slackSend (channel: '#development-alerts', color: '#FF0000', message: "FAILURE: Application s4gautier-pipeline Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+
+        cleanup {
+            deleteDir()
+        }
+    }
+}
+
+
+
+pipeline {
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+        timeout(time: 60, unit: 'MINUTES')
+        timestamps()
+    }
+    environment {
+        DOCKERHUB_CREDS = credentials('dockerhub-creds')
+        GITHUB_TOKEN_CREDS = credentials('github-personal-access-token')
+    } 
+    stages {
+        // ... previous stages ...
+
+        stage('Update charts') {
+            steps {
+                script {
+                    def githubToken = credentials('github-personal-access-token')
+                    if (githubToken != null) {
+                        sh '''
+                            git clone https://gtoukam@github.com/gtoukam/S4gautier-charts.git
+                            cd S4gautier-charts
+                            ls
+                            pwd
+                            cat << EOF > charts/weatherapp-auth/dev-values.yaml
+                            image:
+                              repository: devopseasylearning/s4gautier-auth
+                              tag: ${BUILD_NUMBER}
+                            EOF
+
+                            # ... continue with other chart updates ...
+
+                            git config --global user.name "gtoukam"
+                            git config --global user.email "gautiertoukam29@gmail.com"
+
+                            git add -A 
+                            git commit -m "change from Jenkins CI"
+                            git push 
+                        '''
+                    } else {
+                        error('GitHub personal access token is missing. Please configure it in Jenkins credentials.')
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        // ... post-build actions ...
+    }
+}

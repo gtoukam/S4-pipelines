@@ -139,8 +139,6 @@ pipeline {
                     sh '''
 git clone https://github.com/gtoukam/S4gautier-charts.git
 cd S4gautier-charts
-ls
-pwd
 cat << EOF > charts/weatherapp-auth/dev-values.yaml
 image:
   repository: devopseasylearning/s4gautier-auth

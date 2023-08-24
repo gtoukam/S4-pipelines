@@ -137,7 +137,7 @@ pipeline {
                 script {
 
                     sh '''
-git clone https://github.com/gtoukam/S4gautier-charts.git
+git clone git@github.com:gtoukam/S4gautier-charts.git
 cd S4gautier-charts
 cat << EOF > charts/weatherapp-auth/dev-values.yaml
 image:

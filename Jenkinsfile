@@ -132,13 +132,7 @@ pipeline {
             }
         }
 
-        stage('Update DEV  charts') {
-    //   when{  
-    //       expression {
-    //         env.ENVIRONMENT == 'DEV' }
-          
-    //         }
-      
+        stage('Update charts') {
             steps {
                 script {
 

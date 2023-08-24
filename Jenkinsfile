@@ -145,6 +145,7 @@ image:
   tag: ${BUILD_NUMBER}
 EOF
 
+
 cat << EOF > charts/weatherapp-mysql/dev-values.yaml
 image:
   repository: devopseasylearning/s4gautier-db
